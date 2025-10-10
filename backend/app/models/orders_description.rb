@@ -1,2 +1,2 @@
-class Orders_description < ApplicationRecord
+class OrdersDescription < ApplicationRecord
 end
