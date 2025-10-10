@@ -7,13 +7,15 @@ type Item = {
   price: number;
 };
 
+const URL = "https://teashop-n3kp.onrender.com/";
+
 export function useItems() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/items", {
+    fetch(URL, {
       headers: { "Content-Type": "application/json" },
       //   credentials: "include", //auth
     })
