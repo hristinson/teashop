@@ -261,6 +261,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   brakeman
+  cgi (>= 0.5.0)
   debug
   devise
   pg (~> 1.1)
