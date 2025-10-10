@@ -7,7 +7,7 @@ type Item = {
   price: number;
 };
 
-const URL = "https://teashop-n3kp.onrender.com/";
+const URL = "https://teashop-n3kp.onrender.com/items";
 
 export function useItems() {
   const [items, setItems] = useState<Item[]>([]);
@@ -29,7 +29,9 @@ export function useItems() {
       })
       .catch((err) => {
         setError(err.message);
+        console.log("------Error-----");
         console.log(err);
+        console.log("----------------");
         setLoading(false);
       });
   }, []);
