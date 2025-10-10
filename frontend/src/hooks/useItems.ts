@@ -17,7 +17,7 @@ export function useItems() {
   useEffect(() => {
     fetch(URL, {
       headers: { "Content-Type": "application/json" },
-      //   credentials: "include", //auth
+      // credentials: "include", //auth
     })
       .then((res) => {
         if (!res.ok) throw new Error("Error download");
@@ -29,6 +29,7 @@ export function useItems() {
       })
       .catch((err) => {
         setError(err.message);
+        console.log(err);
         setLoading(false);
       });
   }, []);
