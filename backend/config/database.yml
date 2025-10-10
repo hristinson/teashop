@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: shopmanager
+  password: mySecretPassword
+  host: localhost
+
+development:
+  <<: *default
+  database: material
+
+test:
+  <<: *default
+  database: material
+
+production:
+  <<: *default
+  database: material
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+
