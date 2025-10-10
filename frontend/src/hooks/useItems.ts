@@ -7,7 +7,8 @@ type Item = {
   price: number;
 };
 
-const URL = "https://teashop-n3kp.onrender.com/items";
+// const URL = "https://teashop-n3kp.onrender.com/items"; https://corsfix.com/https://teashop-n3kp.onrender.com/items
+const URL = "https://corsfix.com/https://teashop-n3kp.onrender.com/items";
 
 export function useItems() {
   const [items, setItems] = useState<Item[]>([]);
