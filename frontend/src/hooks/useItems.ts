@@ -20,7 +20,6 @@ export const useItems = () => {
         })
         .then((data) => {
           setItems(data);
-          console.log(data);
           setLoading(false);
         })
         .catch((err) => {

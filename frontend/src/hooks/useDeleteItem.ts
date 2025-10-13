@@ -6,7 +6,7 @@ const useDeleteItem = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const deleteItem = async (id: number) => {
+  const deleteItem = async (id: string | undefined) => {
     setLoading(true);
     setError(null);
     setSuccess(null);

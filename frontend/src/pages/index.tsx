@@ -15,22 +15,28 @@ const ItemsList = () => {
   const [selectedItem, setSelectedItem] = useState({} as ItemModel);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const deleteItem = useCallback((item: number) => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
+  const deleteItem = useCallback(
+    (item: string | undefined) => {
+      const isConfirmed = window.confirm(
+        "Are you sure you want to delete this item?"
+      );
 
-    if (isConfirmed) {
-      deleteItemHook(item);
-    } else {
-      console.log("Item not deleted");
-    }
-  }, []);
+      if (isConfirmed) {
+        deleteItemHook(item);
+      } else {
+        console.log("Item not deleted");
+      }
+    },
+    [deleteItemHook]
+  );
 
-  const openModal = useCallback((item: any) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
-  }, []);
+  const openModal = useCallback(
+    (item: ItemModel) => {
+      setSelectedItem(item);
+      setIsModalOpen(true);
+    },
+    [setSelectedItem, setIsModalOpen]
+  );
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
@@ -45,7 +51,7 @@ const ItemsList = () => {
       </div>
       <div className="App">
         <div className="items_grid">
-          {items.map((item: any) => (
+          {items.map((item: ItemModel) => (
             <div
               key={item.id}
               onClick={() => {

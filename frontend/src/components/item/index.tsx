@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { ItemProps } from "../../models/item";
 import Loader from "../../components/loader";
+import noImage from "../../assets/noImage.jpeg";
+import { useAuth } from "../../context";
 import "./index.css";
 
 const Item: React.FC<ItemProps> = (props) => {
   const { item, deleteItem } = props;
-
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -22,7 +24,7 @@ const Item: React.FC<ItemProps> = (props) => {
     <div className="item">
       <div className="item_image">
         <img
-          src={item.image_url ? item.image_url : "https://placehold.co/300x300"}
+          src={item.image_url ? item.image_url : noImage}
           alt={item.name || "Item"}
           className="item_img"
           onLoad={handleImageLoad}
@@ -34,9 +36,11 @@ const Item: React.FC<ItemProps> = (props) => {
       <div className="item_info">
         <h3 className="item_title">{item.name}</h3>
         <p className="item_price">{item.price}</p>
-        <button className="item_delete_button" onClick={deleteItem}>
-          X
-        </button>
+        {user && user.email === "admin@example.com" ? (
+          <button className="item_delete_button" onClick={deleteItem}>
+            X
+          </button>
+        ) : null}
       </div>
     </div>
   );
