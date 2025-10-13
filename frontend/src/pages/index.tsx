@@ -1,38 +1,50 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useItems } from "../hooks/useItems";
 import useDeleteItem from "../hooks/useDeleteItem";
 import Item from "../components/item";
 import Header from "../components/header";
-import AddItemForm from "../components/addItemForm";
+
 import ItemDetails from "../components/itemDetails";
 import { ItemModel } from "../models/item";
+import Loader from "../components/loader";
 
 const ItemsList = () => {
   const { items, loading, error } = useItems();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { deleteItem, loading: deleteLoading } = useDeleteItem();
+  const { deleteItem: deleteItemHook, loading: deleteLoading } =
+    useDeleteItem();
   const [selectedItem, setSelectedItem] = useState({} as ItemModel);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = (item: any) => {
+  const deleteItem = useCallback((item: number) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+
+    if (isConfirmed) {
+      deleteItemHook(item);
+    } else {
+      console.log("Item not deleted");
+    }
+  }, []);
+
+  const openModal = useCallback((item: any) => {
     setSelectedItem(item);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  if (loading || deleteLoading) return <div>Loading...</div>;
+  if (loading || deleteLoading) return <Loader isBig={true} />;
   if (error) return <div>Error: {error}</div>;
   return (
     <>
       <div>
         <Header />
-        <button onClick={() => setIsDialogOpen(true)}>Add</button>
       </div>
       <div className="App">
-        <div className="items-grid">
+        <div className="items_grid">
           {items.map((item: any) => (
             <div
               key={item.id}
@@ -40,20 +52,15 @@ const ItemsList = () => {
                 openModal(item);
               }}
             >
-              <Item key={item.id} item={item} />
-              <button onClick={() => deleteItem(item.id)}>X</button>
+              <Item
+                key={item.id}
+                item={item}
+                deleteItem={() => deleteItem(item.id)}
+              />
             </div>
           ))}
         </div>
       </div>
-
-      <dialog open={isDialogOpen} className="modal">
-        <h2>Item Details</h2>
-        <>
-          <AddItemForm />
-          <button onClick={() => setIsDialogOpen(false)}>Close</button>
-        </>
-      </dialog>
       <ItemDetails
         item={selectedItem}
         isOpen={isModalOpen}

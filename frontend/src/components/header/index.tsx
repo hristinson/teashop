@@ -1,10 +1,13 @@
-import banner1 from "../../assets/banner.webp";
+import React from "react";
+import banner from "../../assets/banner.webp";
+import HeaderButtons from "../headerButtons";
+import "./index.css";
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
-    <>
-      <img src={banner1} alt="Tea Shop" />
-    </>
+    <div className="header" style={{ backgroundImage: `url(${banner})` }}>
+      <HeaderButtons />
+    </div>
   );
 };
 

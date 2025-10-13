@@ -8,4 +8,5 @@ export interface ItemModel {
 
 export interface ItemProps {
   item: ItemModel;
+  deleteItem?: () => void;
 }
