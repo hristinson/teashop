@@ -1,24 +1,43 @@
-// export default function Main() {
-//   return <div>Hello world!</div>;
-// }
-
-import React from "react";
+import { useState } from "react";
 import { useItems } from "../hooks/useItems";
+import useDeleteItem from "../hooks/useDeleteItem";
+import Item from "../components/item";
+import Header from "../components/header";
+import AddItemForm from "../components/addItemForm";
 
-const ItemsList: React.FC = () => {
+const ItemsList = () => {
   const { items, loading, error } = useItems();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { deleteItem, success } = useDeleteItem();
 
   if (loading) return <div>Завантаження айтемів...</div>;
   if (error) return <div>Помилка: {error}</div>;
 
   return (
-    <ul>
-      {items.map((item) => (
-        <li key={item.id}>
-          <strong>{item.name}</strong>: {item.description} — {item.price} грн
-        </li>
-      ))}
-    </ul>
+    <>
+      <div>
+        <Header />
+        <button onClick={() => setIsDialogOpen(true)}>Add</button>
+      </div>
+      <div className="App">
+        <div className="items-grid">
+          {items.map((item: any) => (
+            <div key={item.id}>
+              <Item key={item.id} item={item} />
+              <button onClick={() => deleteItem(item.id)}>X</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <dialog open={isDialogOpen} className="modal">
+        <h2>Item Details</h2>
+        <>
+          <AddItemForm />
+          <button onClick={() => setIsDialogOpen(false)}>Close</button>
+        </>
+      </dialog>
+    </>
   );
 };
 

@@ -1,40 +1,35 @@
 import { useState, useEffect } from "react";
+import { ItemModel } from "../models/item";
 
-type Item = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-};
+const URL = process.env.REACT_APP_API_URL;
 
-const URL = "https://teashop-n3kp.onrender.com/items";
-
-export function useItems() {
-  const [items, setItems] = useState<Item[]>([]);
+export const useItems = () => {
+  const [items, setItems] = useState<ItemModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(URL, {
-      headers: { "Content-Type": "application/json" },
-      // credentials: "include", //auth
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Error download");
-        return res.json();
+    if (URL) {
+      fetch(`${URL}/items`, {
+        headers: { "Content-Type": "application/json" },
+        // credentials: "include", //auth
       })
-      .then((data) => {
-        setItems(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        console.log("------Error-----");
-        console.log(err);
-        console.log("----------------");
-        setLoading(false);
-      });
+        .then((res) => {
+          if (!res.ok) throw new Error("Error download");
+          return res.json();
+        })
+        .then((data) => {
+          setItems(data);
+          console.log(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setError(err.message);
+
+          setLoading(false);
+        });
+    }
   }, []);
 
   return { items, loading, error };
-}
+};
