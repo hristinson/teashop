@@ -5,7 +5,6 @@ import LoginModal from "../../components/loginModal";
 import AddItemForm from "../../components/addItemForm";
 import AddUserForm from "../../components/addUserForm";
 import { useAuth } from "../../context";
-import { useItems } from "../../hooks/useItems";
 
 interface HeaderButtonsInterface {
   itemsReload: () => void;
@@ -13,19 +12,19 @@ interface HeaderButtonsInterface {
 
 const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const openModal = () => setIsLoginModalOpen(true);
-  const closeModal = () => {
-    setIsLoginModalOpen(false);
-  };
+
   const [isDialogProductOpen, setIsDialogProductOpen] = useState(false);
   const [isDialogUserOpen, setIsDialogUserOpen] = useState(false);
+  const openModal = () => setIsLoginModalOpen(true);
   const { user, setUser } = useAuth();
-  const { setReload } = useItems();
 
-  const close = useCallback(() => {
+  const closeModal = useCallback(() => {
+    setIsLoginModalOpen(false);
+    setIsDialogProductOpen(false);
+    setIsDialogUserOpen(false);
     setIsDialogProductOpen(false);
     itemsReload();
-  }, [setReload, setIsDialogProductOpen]);
+  }, [setIsDialogProductOpen, itemsReload]);
 
   return (
     <header className="headerButtons">
@@ -71,22 +70,9 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
           ) : null}
         </div>
       </div>
-
       <LoginModal showModal={isLoginModalOpen} closeModal={closeModal} />
-      <dialog open={isDialogProductOpen} className="dialog">
-        <h2>Item Details</h2>
-        <>
-          <AddItemForm closeModal={close} />
-          <button onClick={close}>Close</button>
-        </>
-      </dialog>
-      <dialog open={isDialogUserOpen} className="dialog">
-        <h2>Item Details</h2>
-        <>
-          <AddUserForm />
-          <button onClick={() => setIsDialogUserOpen(false)}>Close</button>
-        </>
-      </dialog>
+      <AddItemForm showModal={isDialogProductOpen} closeModal={closeModal} />
+      <AddUserForm showModal={isDialogUserOpen} closeModal={closeModal} />
     </header>
   );
 };

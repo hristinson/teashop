@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { ItemModel } from "../models/item";
 
 const URL = process.env.REACT_APP_API_URL;

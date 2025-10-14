@@ -1,9 +1,15 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
+import useDragging from "../../hooks/useDragging";
+import "./index.css";
 interface AddItemFormInterface {
+  showModal: boolean;
   closeModal: () => void;
 }
 
-const AddItemForm: React.FC<AddItemFormInterface> = ({ closeModal }) => {
+const AddItemForm: React.FC<AddItemFormInterface> = ({
+  showModal,
+  closeModal,
+}) => {
   const URL = process.env.REACT_APP_API_URL;
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -11,6 +17,17 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({ closeModal }) => {
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const dragProps = useDragging(dialogRef, true);
+
+  React.useEffect(() => {
+    if (showModal && dialogRef.current) {
+      dialogRef.current.showModal();
+    } else if (dialogRef.current) {
+      dialogRef.current.close();
+      setImage(null);
+    }
+  }, [showModal]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,6 +66,12 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({ closeModal }) => {
         setDescription("");
         setPrice(0);
         setImage(null);
+        const fileInput = document.querySelector(
+          'input[type="file"]'
+        ) as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = "";
+        }
         setSuccess("Item added successfully");
         setError(null);
         setTimeout(() => {
@@ -64,7 +87,11 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({ closeModal }) => {
   );
 
   return (
-    <div>
+    <dialog ref={dialogRef} className="modal-dialog" {...dragProps}>
+      <button className="close-btn" onClick={closeModal}>
+        X
+      </button>
+
       <h2>Add Item</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
@@ -94,11 +121,16 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({ closeModal }) => {
         </div>
         <div>
           <label>Image:</label>
-          <input type="file" onChange={handleImageChange} accept="image/*" />
+          <input
+            type="file"
+            className="file-path"
+            onChange={handleImageChange}
+            accept="image/*"
+          />
         </div>
         <button type="submit">Add Item</button>
       </form>
-    </div>
+    </dialog>
   );
 };
 

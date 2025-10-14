@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useAuth } from "../../context";
+import useDragging from "../../hooks/useDragging";
 
-const AddUserForm: React.FC = () => {
+interface AddUserFormInterface {
+  showModal: boolean;
+  closeModal: () => void;
+}
+
+const AddUserForm: React.FC<AddUserFormInterface> = ({
+  showModal,
+  closeModal,
+}) => {
   const URL = process.env.REACT_APP_API_URL;
   const [first_name, setFirstName] = useState<string>("");
   const [last_name, setLastName] = useState<string>("");
@@ -11,6 +20,16 @@ const AddUserForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { user } = useAuth();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const dragProps = useDragging(dialogRef, true);
+
+  React.useEffect(() => {
+    if (showModal && dialogRef.current) {
+      dialogRef.current.showModal();
+    } else if (dialogRef.current) {
+      dialogRef.current.close();
+    }
+  }, [showModal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +72,10 @@ const AddUserForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <dialog ref={dialogRef} className="modal-dialog" {...dragProps}>
+      <button className="close-btn" onClick={closeModal}>
+        X
+      </button>
       <h2>Add User</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
@@ -104,7 +126,7 @@ const AddUserForm: React.FC = () => {
 
         <button type="submit">Add User</button>
       </form>
-    </div>
+    </dialog>
   );
 };
 
