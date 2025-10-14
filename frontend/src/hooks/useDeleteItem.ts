@@ -24,7 +24,6 @@ const useDeleteItem = () => {
       }
 
       setSuccess("Item deleted successfully!");
-      window.location.reload();
     } catch (err: any) {
       setError(err.message);
     } finally {

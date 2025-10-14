@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+interface AddItemFormInterface {
+  closeModal: () => void;
+}
 
-const AddItemForm: React.FC = () => {
+const AddItemForm: React.FC<AddItemFormInterface> = ({ closeModal }) => {
   const URL = process.env.REACT_APP_API_URL;
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -14,45 +17,51 @@ const AddItemForm: React.FC = () => {
       setImage(e.target.files[0]);
     }
   };
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!name || !description || !price) {
-      setError("Please fill in all fields, including the image.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("item[name]", name);
-    formData.append("item[description]", description);
-    formData.append("item[price]", price.toString());
-    if (image) formData.append("item[image]", image);
-
-    try {
-      const response = await fetch(`${URL}/items`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add item");
+      if (!name || !description || !price) {
+        setError("Please fill in all fields, including the image.");
+        return;
       }
 
-      const data = await response.json();
-      console.log("Item created:", data);
+      const formData = new FormData();
+      formData.append("item[name]", name);
+      formData.append("item[description]", description);
+      formData.append("item[price]", price.toString());
+      if (image) formData.append("item[image]", image);
 
-      setName("");
-      setDescription("");
-      setPrice(0);
-      setImage(null);
-      setSuccess("Item added successfully");
-      setError(null);
-    } catch (err: any) {
-      setError(err.message);
-      setSuccess(null);
-    }
-  };
+      try {
+        const response = await fetch(`${URL}/items`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add item");
+        }
+
+        const data = await response.json();
+        console.log("Item created:", data);
+
+        setName("");
+        setDescription("");
+        setPrice(0);
+        setImage(null);
+        setSuccess("Item added successfully");
+        setError(null);
+        setTimeout(() => {
+          closeModal();
+          setSuccess("");
+        }, 1000);
+      } catch (err: any) {
+        setError(err.message);
+        setSuccess(null);
+      }
+    },
+    [URL, closeModal, description, image, name, price]
+  );
 
   return (
     <div>

@@ -3,17 +3,21 @@ import { useItems } from "../hooks/useItems";
 import useDeleteItem from "../hooks/useDeleteItem";
 import Item from "../components/item";
 import Header from "../components/header";
-
+import FullScreenPlaceholder from "../components/fullScreenPlaceholder";
 import ItemDetails from "../components/itemDetails";
 import { ItemModel } from "../models/item";
 import Loader from "../components/loader";
 
 const ItemsList = () => {
-  const { items, loading, error } = useItems();
+  const { items, loading, error, setReload } = useItems();
   const { deleteItem: deleteItemHook, loading: deleteLoading } =
     useDeleteItem();
   const [selectedItem, setSelectedItem] = useState({} as ItemModel);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const itemsReload = useCallback(() => {
+    setReload(true);
+  }, [setReload]);
 
   const deleteItem = useCallback(
     (item: string | undefined) => {
@@ -23,11 +27,12 @@ const ItemsList = () => {
 
       if (isConfirmed) {
         deleteItemHook(item);
+        itemsReload();
       } else {
         console.log("Item not deleted");
       }
     },
-    [deleteItemHook]
+    [deleteItemHook, itemsReload]
   );
 
   const openModal = useCallback(
@@ -43,25 +48,23 @@ const ItemsList = () => {
   }, []);
 
   if (loading || deleteLoading) return <Loader isBig={true} />;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <FullScreenPlaceholder />;
   return (
     <>
       <div>
-        <Header />
+        <Header itemsReload={itemsReload} />
       </div>
       <div className="App">
         <div className="items_grid">
           {items.map((item: ItemModel) => (
-            <div
-              key={item.id}
-              onClick={() => {
-                openModal(item);
-              }}
-            >
+            <div key={item.id}>
               <Item
                 key={item.id}
                 item={item}
                 deleteItem={() => deleteItem(item.id)}
+                openModal={() => {
+                  openModal(item);
+                }}
               />
             </div>
           ))}

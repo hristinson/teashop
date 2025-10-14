@@ -1,0 +1,14 @@
+.no-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.no-data-message {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff4d4d;
+  text-align: center;
+}

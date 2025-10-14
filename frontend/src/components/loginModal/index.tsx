@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import "./index.css";
 import { useAuth } from "../../context/";
+import useDragging from "../../hooks/useDragging";
+
 const URL = process.env.REACT_APP_API_URL;
 
 interface ModalProps {
@@ -15,6 +17,7 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const dragProps = useDragging(dialogRef, true);
 
   React.useEffect(() => {
     if (showModal && dialogRef.current) {
@@ -48,13 +51,13 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
   };
 
   return (
-    <dialog ref={dialogRef} className="modal-dialog">
+    <dialog ref={dialogRef} className="modal-dialog" {...dragProps}>
       <button className="close-btn" onClick={closeModal}>
         X
       </button>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Username</label>{" "}
         <input
           type="text"
           id="username"
@@ -63,7 +66,9 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <label htmlFor="password">Password</label>
+        <br />
+        <br />
+        <label htmlFor="password">Password</label>{" "}
         <input
           type="password"
           id="password"
@@ -73,6 +78,8 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
           required
         />
         {error && <p className="error">{error}</p>}
+        <br />
+        <br />
         <button type="submit">Submit</button>
       </form>
     </dialog>

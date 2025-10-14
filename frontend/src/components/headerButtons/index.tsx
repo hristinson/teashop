@@ -1,46 +1,90 @@
-import React, { useState } from "react";
+import { useState, useCallback } from "react";
 import "./index.css";
 import packageInfo from "../../../package.json";
 import LoginModal from "../../components/loginModal";
 import AddItemForm from "../../components/addItemForm";
+import AddUserForm from "../../components/addUserForm";
 import { useAuth } from "../../context";
+import { useItems } from "../../hooks/useItems";
 
-const HeaderButtons: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { user } = useAuth();
+interface HeaderButtonsInterface {
+  itemsReload: () => void;
+}
+
+const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const openModal = () => setIsLoginModalOpen(true);
+  const closeModal = () => {
+    setIsLoginModalOpen(false);
+  };
+  const [isDialogProductOpen, setIsDialogProductOpen] = useState(false);
+  const [isDialogUserOpen, setIsDialogUserOpen] = useState(false);
+  const { user, setUser } = useAuth();
+  const { setReload } = useItems();
+
+  const close = useCallback(() => {
+    setIsDialogProductOpen(false);
+    itemsReload();
+  }, [setReload, setIsDialogProductOpen]);
 
   return (
     <header className="headerButtons">
       <div className="ribbon">
         <span className="version">version: {packageInfo.version}</span>
         <span className="version">
-          {user && user.email === "admin@example.com" ? (
+          {user && user.email ? (
             <>
               {user.first_name} {user.last_name}
             </>
           ) : null}
         </span>
         <div className="btnsBlock">
-          {user && user.email === "admin@example.com" ? (
-            <button onClick={() => setIsDialogOpen(true)} className="login-btn">
-              Add
+          {user && user.role === "admin" ? (
+            <>
+              <button
+                onClick={() => setIsDialogProductOpen(true)}
+                className="login-btn"
+              >
+                Add product
+              </button>
+              <button
+                onClick={() => setIsDialogUserOpen(true)}
+                className="login-btn"
+              >
+                Add user
+              </button>
+            </>
+          ) : null}
+          <button
+            className="login-btn"
+            onClick={user ? () => setUser(null) : openModal}
+          >
+            {user ? "Exit" : "Login"}
+          </button>
+          {!user ? (
+            <button
+              onClick={() => setIsDialogUserOpen(true)}
+              className="login-btn"
+            >
+              Sign in
             </button>
           ) : null}
-          <button className="login-btn" onClick={openModal}>
-            Login
-          </button>
         </div>
       </div>
 
-      <LoginModal showModal={isModalOpen} closeModal={closeModal} />
-      <dialog open={isDialogOpen} className="dialog">
+      <LoginModal showModal={isLoginModalOpen} closeModal={closeModal} />
+      <dialog open={isDialogProductOpen} className="dialog">
         <h2>Item Details</h2>
         <>
-          <AddItemForm />
-          <button onClick={() => setIsDialogOpen(false)}>Close</button>
+          <AddItemForm closeModal={close} />
+          <button onClick={close}>Close</button>
+        </>
+      </dialog>
+      <dialog open={isDialogUserOpen} className="dialog">
+        <h2>Item Details</h2>
+        <>
+          <AddUserForm />
+          <button onClick={() => setIsDialogUserOpen(false)}>Close</button>
         </>
       </dialog>
     </header>

@@ -6,7 +6,7 @@ import { useAuth } from "../../context";
 import "./index.css";
 
 const Item: React.FC<ItemProps> = (props) => {
-  const { item, deleteItem } = props;
+  const { item, deleteItem, openModal } = props;
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -29,6 +29,7 @@ const Item: React.FC<ItemProps> = (props) => {
           className="item_img"
           onLoad={handleImageLoad}
           onError={handleImageError}
+          onClick={openModal}
         />
       </div>
       {isLoading ? <Loader isBig={false} /> : null}
