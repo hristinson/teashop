@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.css";
 import { ItemModel } from "../../models/item";
+import noImage from "../../assets/noImage.jpeg";
 interface ItemDetailsProps {
   item: ItemModel;
   isOpen: boolean;
@@ -18,7 +19,11 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ item, isOpen, onClose }) => {
         </button>
         <div className="modal-body">
           <h2>{item.name}</h2>
-          <img src={item.image_url} alt={item.name} className="modal-image" />
+          <img
+            src={item.image_url ? item.image_url : noImage}
+            alt={item.name}
+            className="modal-image"
+          />
           <p>{item.description}</p>
           <p>
             <strong>Price: </strong>

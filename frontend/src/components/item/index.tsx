@@ -37,9 +37,19 @@ const Item: React.FC<ItemProps> = (props) => {
       <div className="item_info">
         <h3 className="item_title">{item.name}</h3>
         <p className="item_price">{item.price}</p>
-        {user && user.email === "admin@example.com" ? (
+        {user && user.role === "admin" ? (
           <button className="item_delete_button" onClick={deleteItem}>
             X
+          </button>
+        ) : null}
+        {user && user.role !== "admin" ? (
+          <button
+            className="item_buy_button"
+            onClick={() => {
+              alert("Buy");
+            }}
+          >
+            Buy
           </button>
         ) : null}
       </div>
