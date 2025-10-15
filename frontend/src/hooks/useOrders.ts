@@ -1,26 +1,28 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context";
+import axios from "axios";
 const URL = process.env.REACT_APP_API_URL;
 
 const useOrders = () => {
-  const [ordersCount, setOrdersCount] = useState(null);
+  const [ordersCount, setOrdersCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const { user } = useAuth();
 
   const fetchOrdersCount = useCallback(async () => {
     if (user && user.id) {
       try {
-        const response = await fetch(`${URL}/count?user_id=${user.id}`);
+        const response = await axios.get(`${URL}/count`, {
+          params: { user_id: user.id },
+        });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch orders count");
+        setOrdersCount(response.data.order_count);
+        // console.log("ToDo");
+        // console.log(ordersCount);
+        // console.log("------");
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          console.log(axios.isAxiosError(err));
         }
-
-        const data = await response.json();
-        setOrdersCount(data.order_count);
-      } catch (err: any) {
-        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -38,26 +40,21 @@ const useOrders = () => {
       formData.append("order[amount]", quantity.toString());
 
       try {
-        const response = await fetch(`${URL}/orders`, {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!response.ok) {
+        const response = await axios.post(`${URL}/orders`, formData);
+        if (response.status !== 201) {
           throw new Error("Failed to add item");
         }
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          console.log(axios.isAxiosError(err));
+        }
       } finally {
         fetchOrdersCount();
-        console.log("ToDo");
-        console.log(ordersCount);
-        console.log("------");
       }
     }
   };
 
-  return { ordersCount, loading, error, createOrder };
+  return { ordersCount, loading, createOrder };
 };
 
 export default useOrders;

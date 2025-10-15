@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useRef } from "react";
 import useDragging from "../../hooks/useDragging";
+import axios from "axios";
 import "./index.css";
 interface AddItemFormInterface {
   showModal: boolean;
@@ -50,16 +51,18 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({
       if (image) formData.append("item[image]", image);
 
       try {
-        const response = await fetch(`${URL}/items`, {
-          method: "POST",
-          body: formData,
+        const response = await axios.post(`${URL}/items`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // credentials: "include"
+          },
         });
 
-        if (!response.ok) {
+        if (!response) {
           throw new Error("Failed to add item");
         }
 
-        const data = await response.json();
+        const data = await response.data;
         console.log("Item created:", data);
 
         setName("");

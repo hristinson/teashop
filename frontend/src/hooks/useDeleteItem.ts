@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 const URL = process.env.REACT_APP_API_URL;
 
 const useDeleteItem = () => {
@@ -12,17 +13,15 @@ const useDeleteItem = () => {
     setSuccess(null);
 
     try {
-      const response = await fetch(`${URL}/items/${id}`, {
-        method: "DELETE",
+      const response = await axios.delete(`${URL}/items/${id}`, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to delete item");
       }
-
       setSuccess("Item deleted successfully!");
     } catch (err: any) {
       setError(err.message);

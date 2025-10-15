@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAuth } from "../../context";
 import useDragging from "../../hooks/useDragging";
+import axios from "axios";
 
 interface AddUserFormInterface {
   showModal: boolean;
@@ -46,16 +47,13 @@ const AddUserForm: React.FC<AddUserFormInterface> = ({
     formData.append("user[role]", role);
 
     try {
-      const response = await fetch(`${URL}/users`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(`${URL}/users`, formData);
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to add user");
       }
 
-      const data = await response.json();
+      const data = await response.data;
       console.log("User created:", data);
 
       setFirstName("");

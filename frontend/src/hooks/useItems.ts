@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ItemModel } from "../models/item";
+import axios from "axios";
 
 const URL = process.env.REACT_APP_API_URL;
 
@@ -10,27 +11,30 @@ export const useItems = () => {
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    if (URL) {
-      fetch(`${URL}/items`, {
-        headers: { "Content-Type": "application/json" },
-        // credentials: "include", //auth
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Error download");
-          return res.json();
-        })
-        .then((data) => {
-          setItems(data);
+    const fetchItems = async () => {
+      if (URL) {
+        setLoading(true);
+
+        try {
+          const response = await axios.get(`${URL}/items`, {
+            headers: { "Content-Type": "application/json" },
+          });
+
+          setItems(response.data);
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            setError(err.message);
+          } else {
+            setError("Unknown error occurred");
+          }
+        } finally {
           setLoading(false);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setLoading(true);
-        })
-        .finally(() => {
           setReload(false);
-        });
-    }
+        }
+      }
+    };
+
+    fetchItems();
   }, [reload]);
 
   return { items, loading, error, setReload, reload };

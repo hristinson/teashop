@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
-import "./index.css";
+import axios from "axios";
 import { useAuth } from "../../context/";
 import useDragging from "../../hooks/useDragging";
+import "./index.css";
 
 const URL = process.env.REACT_APP_API_URL;
 
@@ -31,18 +32,20 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${URL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await axios.post(
+        `${URL}/login`,
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Invalid credentials");
       }
-      const data = await response.json();
+      const data = await response.data;
       setUser(data.user);
       closeModal();
     } catch (error: any) {

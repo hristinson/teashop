@@ -60,7 +60,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
           {user && user.role !== "admin" ? (
             <button onClick={() => alert(true)} className="login-btn">
               Basket
-              {ordersCount && <Badge count={ordersCount} />}
+              {ordersCount > 0 && <Badge count={ordersCount} />}
             </button>
           ) : null}
           <button
