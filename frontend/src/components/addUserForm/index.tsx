@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../context";
 import useDragging from "../../hooks/useDragging";
 import axios from "axios";
@@ -24,7 +24,7 @@ const AddUserForm: React.FC<AddUserFormInterface> = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dragProps = useDragging(dialogRef, true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (showModal && dialogRef.current) {
       dialogRef.current.showModal();
     } else if (dialogRef.current) {

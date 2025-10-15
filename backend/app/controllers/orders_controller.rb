@@ -1,7 +1,12 @@
 class OrdersController < ActionController::API
-  def index
-    @orders = Order.all
-    render json: @orders, status: :ok
+   def index
+    @user = User.find_by(id: params[:user_id])
+    if @user
+      @orders = @user.orders
+      render json: @orders, status: :ok
+    else
+      render json: { error: "User not found" }, status: :not_found
+    end
   end
 
   def show
@@ -23,6 +28,21 @@ class OrdersController < ActionController::API
       render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
+  ###########################################
+
+  # def create
+  #   @order = Order.new(order_params) 
+  #   if @order.save
+  #     item = params[:order][:item]
+  #     @order.order_descriptions.create(item_id: item[:item_id], quantity: item[:quantity])
+  #     render json: @order, status: :created
+  #   else
+  #     render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity 
+  #   end
+  # end
+
+  ###########################################################################
 
   def update
     @order = Order.find_by(id: params[:id])
@@ -58,6 +78,12 @@ class OrdersController < ActionController::API
   end
 
   private
+  #  def set_user
+  #   @user = User.find_by(id: params[:user_id])  # Шукаємо користувача за user_id
+  #   if @user.nil?
+  #     render json: { error: "User not found" }, status: :not_found
+  #   end
+  # end
 
   def order_params
     params.require(:order).permit(:user_id, :amount)

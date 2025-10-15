@@ -7,6 +7,7 @@ import AddUserForm from "../../components/addUserForm";
 import { useAuth } from "../../context";
 import Badge from "../badge";
 import useOrders from "../../hooks/useOrders";
+import OrdersDialog from "../../components/orders";
 
 interface HeaderButtonsInterface {
   itemsReload: () => void;
@@ -14,7 +15,7 @@ interface HeaderButtonsInterface {
 
 const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
+  const [isDialogOrdersOpen, setIsDialogOrdersOpen] = useState(false);
   const [isDialogProductOpen, setIsDialogProductOpen] = useState(false);
   const [isDialogUserOpen, setIsDialogUserOpen] = useState(false);
   const openModal = () => setIsLoginModalOpen(true);
@@ -26,6 +27,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
     setIsDialogProductOpen(false);
     setIsDialogUserOpen(false);
     setIsDialogProductOpen(false);
+    setIsDialogOrdersOpen(false);
     itemsReload();
   }, [setIsDialogProductOpen, itemsReload]);
 
@@ -36,7 +38,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
         <span className="version">
           {user && user.email ? (
             <>
-              {user.first_name} {user.last_name}
+              {user.first_name} {user.last_name} {user.role} id: {user.id}
             </>
           ) : null}
         </span>
@@ -58,7 +60,10 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
             </>
           ) : null}
           {user && user.role !== "admin" ? (
-            <button onClick={() => alert(true)} className="login-btn">
+            <button
+              onClick={() => setIsDialogOrdersOpen(true)}
+              className="login-btn"
+            >
               Basket
               {ordersCount > 0 && <Badge count={ordersCount} />}
             </button>
@@ -82,6 +87,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
       <LoginModal showModal={isLoginModalOpen} closeModal={closeModal} />
       <AddItemForm showModal={isDialogProductOpen} closeModal={closeModal} />
       <AddUserForm showModal={isDialogUserOpen} closeModal={closeModal} />
+      <OrdersDialog showModal={isDialogOrdersOpen} closeModal={closeModal} />
     </header>
   );
 };
