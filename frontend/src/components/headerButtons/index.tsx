@@ -6,6 +6,7 @@ import AddItemForm from "../../components/addItemForm";
 import AddUserForm from "../../components/addUserForm";
 import { useAuth } from "../../context";
 import Badge from "../badge";
+import useOrders from "../../hooks/useOrders";
 
 interface HeaderButtonsInterface {
   itemsReload: () => void;
@@ -18,6 +19,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
   const [isDialogUserOpen, setIsDialogUserOpen] = useState(false);
   const openModal = () => setIsLoginModalOpen(true);
   const { user, setUser } = useAuth();
+  const { ordersCount } = useOrders();
 
   const closeModal = useCallback(() => {
     setIsLoginModalOpen(false);
@@ -26,8 +28,6 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
     setIsDialogProductOpen(false);
     itemsReload();
   }, [setIsDialogProductOpen, itemsReload]);
-
-  const itemsCount = 1;
 
   return (
     <header className="headerButtons">
@@ -60,7 +60,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
           {user && user.role !== "admin" ? (
             <button onClick={() => alert(true)} className="login-btn">
               Basket
-              {itemsCount > 0 && <Badge count={itemsCount} />}
+              {ordersCount && <Badge count={ordersCount} />}
             </button>
           ) : null}
           <button

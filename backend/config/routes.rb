@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   resources :orders, defaults: { format: :json }
   resources :orders_descriptions, defaults: { format: :json }
   post 'login', to: 'users#login'
+  get 'count', to: 'orders#count'
+  post 'orders', to: 'orders#create'
+  get 'orders', to: 'orders#index'
 
-  # root to: proc { [200, { 'Content-Type' => 'text/plain' }, ['API is running']] }
 end
+

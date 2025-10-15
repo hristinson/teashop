@@ -4,12 +4,14 @@ import Loader from "../../components/loader";
 import noImage from "../../assets/noImage.jpeg";
 import { useAuth } from "../../context";
 import "./index.css";
+import useOrders from "../../hooks/useOrders";
 
 const Item: React.FC<ItemProps> = (props) => {
   const { item, deleteItem, openModal } = props;
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const { createOrder } = useOrders();
 
   const handleImageLoad = () => {
     setIsLoading(false);
@@ -46,10 +48,10 @@ const Item: React.FC<ItemProps> = (props) => {
           <button
             className="item_buy_button"
             onClick={() => {
-              alert("Buy");
+              createOrder(item.id, item.price);
             }}
           >
-            Buy
+            Add to Basket
           </button>
         ) : null}
       </div>
