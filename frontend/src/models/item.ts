@@ -10,4 +10,5 @@ export interface ItemProps {
   item: ItemModel;
   deleteItem?: () => void;
   openModal?: () => void;
+  setIsDialogOrdersOpen?: (state: boolean) => void;
 }

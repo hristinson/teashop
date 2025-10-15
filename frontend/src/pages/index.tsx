@@ -14,6 +14,7 @@ const ItemsList = () => {
     useDeleteItem();
   const [selectedItem, setSelectedItem] = useState({} as ItemModel);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOrdersOpen, setIsDialogOrdersOpen] = useState(false);
 
   const itemsReload = useCallback(() => {
     setReload(true);
@@ -52,13 +53,18 @@ const ItemsList = () => {
   return (
     <>
       <div>
-        <Header itemsReload={itemsReload} />
+        <Header
+          itemsReload={itemsReload}
+          isDialogOrdersOpen={isDialogOrdersOpen}
+          setIsDialogOrdersOpen={setIsDialogOrdersOpen}
+        />
       </div>
       <div className="App">
         <div className="items_grid">
           {items.map((item: ItemModel) => (
             <div key={item.id}>
               <Item
+                setIsDialogOrdersOpen={setIsDialogOrdersOpen}
                 key={item.id}
                 item={item}
                 deleteItem={() => deleteItem(item.id)}

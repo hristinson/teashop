@@ -69,9 +69,18 @@ const OrdersDialog: React.FC<OrdersDialogInterface> = ({
             {orders.map((order) => {
               return (
                 <tr key={order.id}>
-                  <td>{order.orders_descriptions[0].item.name}</td>
-                  <td>{order.orders_descriptions[0].item.price}</td>
-                  <td>{order.orders_descriptions[0].quantity}</td>
+                  <td>
+                    {order.orders_descriptions[0] &&
+                      order.orders_descriptions[0].item.name}
+                  </td>
+                  <td>
+                    {order.orders_descriptions[0] &&
+                      order.orders_descriptions[0].item.price}
+                  </td>
+                  <td>
+                    {order.orders_descriptions[0] &&
+                      order.orders_descriptions[0].quantity}
+                  </td>
                 </tr>
               );
             })}

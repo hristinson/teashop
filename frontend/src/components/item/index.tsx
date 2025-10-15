@@ -7,7 +7,7 @@ import "./index.css";
 import useOrders from "../../hooks/useOrders";
 
 const Item: React.FC<ItemProps> = (props) => {
-  const { item, deleteItem, openModal } = props;
+  const { item, deleteItem, openModal, setIsDialogOrdersOpen } = props;
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -49,6 +49,7 @@ const Item: React.FC<ItemProps> = (props) => {
             className="item_buy_button"
             onClick={() => {
               createOrder(item.id, 1);
+              setIsDialogOrdersOpen && setIsDialogOrdersOpen(true);
             }}
           >
             Add to Basket

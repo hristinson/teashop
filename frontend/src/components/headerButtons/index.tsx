@@ -11,11 +11,16 @@ import OrdersDialog from "../../components/orders";
 
 interface HeaderButtonsInterface {
   itemsReload: () => void;
+  isDialogOrdersOpen: boolean;
+  setIsDialogOrdersOpen: (state: boolean) => void;
 }
 
-const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
+const HeaderButtons: React.FC<HeaderButtonsInterface> = ({
+  itemsReload,
+  isDialogOrdersOpen,
+  setIsDialogOrdersOpen,
+}) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isDialogOrdersOpen, setIsDialogOrdersOpen] = useState(false);
   const [isDialogProductOpen, setIsDialogProductOpen] = useState(false);
   const [isDialogUserOpen, setIsDialogUserOpen] = useState(false);
   const openModal = () => setIsLoginModalOpen(true);
@@ -29,7 +34,7 @@ const HeaderButtons: React.FC<HeaderButtonsInterface> = ({ itemsReload }) => {
     setIsDialogProductOpen(false);
     setIsDialogOrdersOpen(false);
     itemsReload();
-  }, [setIsDialogProductOpen, itemsReload]);
+  }, [setIsDialogProductOpen, itemsReload, setIsDialogOrdersOpen]);
 
   return (
     <header className="headerButtons">
