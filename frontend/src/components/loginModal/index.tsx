@@ -60,7 +60,7 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
       </button>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>{" "}
+        <label htmlFor="username">Email</label>{" "}
         <input
           type="text"
           id="username"
