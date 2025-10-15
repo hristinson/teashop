@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/";
 import useDragging from "../../hooks/useDragging";
@@ -20,7 +20,7 @@ const LoginModal: React.FC<ModalProps> = ({ showModal, closeModal }) => {
   const [error, setError] = useState<string | null>(null);
   const dragProps = useDragging(dialogRef, true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (showModal && dialogRef.current) {
       dialogRef.current.showModal();
     } else if (dialogRef.current) {

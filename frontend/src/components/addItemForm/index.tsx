@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import useDragging from "../../hooks/useDragging";
 import axios from "axios";
 import "./index.css";
@@ -21,7 +21,7 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dragProps = useDragging(dialogRef, true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (showModal && dialogRef.current) {
       dialogRef.current.showModal();
     } else if (dialogRef.current) {
