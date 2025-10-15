@@ -48,7 +48,7 @@ const Item: React.FC<ItemProps> = (props) => {
           <button
             className="item_buy_button"
             onClick={() => {
-              createOrder(item.id, item.price);
+              createOrder(item.id, 1);
             }}
           >
             Add to Basket

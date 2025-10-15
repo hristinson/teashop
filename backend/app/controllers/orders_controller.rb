@@ -1,13 +1,27 @@
 class OrdersController < ActionController::API
-   def index
-    @user = User.find_by(id: params[:user_id])
-    if @user
-      @orders = @user.orders
-      render json: @orders, status: :ok
-    else
-      render json: { error: "User not found" }, status: :not_found
-    end
+  def index
+  @user = User.find_by(id: params[:user_id])
+  if @user
+    @orders = @user.orders.includes(orders_descriptions: :item)
+
+    render json: @orders.as_json(
+      include: {
+        orders_descriptions: {
+          include: {
+            item: {
+              only: [:id, :name, :price]
+            }
+          },
+          only: [:id, :quantity]
+        }
+      },
+      only: [:id, :amount, :created_at]
+    ), status: :ok
+  else
+    render json: { error: "User not found" }, status: :not_found
   end
+end
+
 
   def show
     @order = Order.find_by(id: params[:id])
@@ -20,27 +34,15 @@ class OrdersController < ActionController::API
   end
 
   def create
-    @order = Order.new(order_params)
-
+    @order = Order.new(order_params) 
     if @order.save
+      item = params[:order][:item]
+      @order.orders_descriptions.create(item_id: item[:item_id], quantity: item[:quantity])
       render json: @order, status: :created
     else
-      render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity 
     end
   end
-
-  ###########################################
-
-  # def create
-  #   @order = Order.new(order_params) 
-  #   if @order.save
-  #     item = params[:order][:item]
-  #     @order.order_descriptions.create(item_id: item[:item_id], quantity: item[:quantity])
-  #     render json: @order, status: :created
-  #   else
-  #     render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity 
-  #   end
-  # end
 
   ###########################################################################
 

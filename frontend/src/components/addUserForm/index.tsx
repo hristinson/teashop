@@ -53,9 +53,6 @@ const AddUserForm: React.FC<AddUserFormInterface> = ({
         throw new Error("Failed to add user");
       }
 
-      const data = await response.data;
-      console.log("User created:", data);
-
       setFirstName("");
       setLastName("");
       setEmail("");

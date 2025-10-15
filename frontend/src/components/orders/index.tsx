@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../context";
 import axios from "axios";
+import "./index.css";
 
 type Order = {
   id: number;
   amount: number;
   createdAt: string;
+  orders_descriptions: Record<string, any>;
 };
 
 const URL = process.env.REACT_APP_API_URL;
@@ -55,14 +57,26 @@ const OrdersDialog: React.FC<OrdersDialogInterface> = ({
       <h2 className="dialog-title">List of Orders</h2>
 
       <ul className="order-list">
-        {orders.map((order) => {
-          return (
-            <li key={order.id} className="order-item">
-              <span className="order-amount">${order.amount}</span>
-              <span className="order-date">{order.createdAt}</span>
-            </li>
-          );
-        })}
+        <table className="orders-table">
+          <thead>
+            <tr>
+              <th>Item name</th>
+              <th>Item price</th>
+              <th>quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => {
+              return (
+                <tr key={order.id}>
+                  <td>{order.orders_descriptions[0].item.name}</td>
+                  <td>{order.orders_descriptions[0].item.price}</td>
+                  <td>{order.orders_descriptions[0].quantity}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </ul>
     </dialog>
   );

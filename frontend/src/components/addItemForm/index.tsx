@@ -62,9 +62,6 @@ const AddItemForm: React.FC<AddItemFormInterface> = ({
           throw new Error("Failed to add item");
         }
 
-        const data = await response.data;
-        console.log("Item created:", data);
-
         setName("");
         setDescription("");
         setPrice(0);

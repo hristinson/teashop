@@ -21,7 +21,7 @@ const useOrders = () => {
         // console.log("------");
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          console.log(axios.isAxiosError(err));
+          console.error(axios.isAxiosError(err));
         }
       } finally {
         setLoading(false);
@@ -34,10 +34,12 @@ const useOrders = () => {
   }, [user, fetchOrdersCount]);
 
   const createOrder = async (itemId: string | undefined, quantity: number) => {
-    if (user && user.id) {
+    if (user && user.id && itemId) {
       const formData = new FormData();
       formData.append("order[user_id]", user.id.toString());
       formData.append("order[amount]", quantity.toString());
+      formData.append("order[item][item_id]", itemId.toString());
+      formData.append("order[item][quantity]", quantity.toString());
 
       try {
         const response = await axios.post(`${URL}/orders`, formData);
@@ -46,7 +48,7 @@ const useOrders = () => {
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          console.log(axios.isAxiosError(err));
+          console.error(axios.isAxiosError(err));
         }
       } finally {
         fetchOrdersCount();

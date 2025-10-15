@@ -29,7 +29,7 @@ const ItemsList = () => {
         deleteItemHook(item);
         itemsReload();
       } else {
-        console.log("Item not deleted");
+        console.error("Item not deleted");
       }
     },
     [deleteItemHook, itemsReload]
