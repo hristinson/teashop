@@ -5,8 +5,28 @@ const URL = process.env.REACT_APP_API_URL;
 
 const useOrders = () => {
   const [ordersCount, setOrdersCount] = useState(0);
+  const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+
+  const fetchAllOrders = useCallback(async () => {
+    try {
+      const response = await axios.get(`${URL}/orders/all`);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      setAllOrders(response.data);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error("Axios error:", err.response?.data || err.message);
+      } else {
+        console.error("Unknown error:", err);
+      }
+      return [];
+    }
+  }, []);
 
   const fetchOrdersCount = useCallback(async () => {
     if (user && user.id) {
@@ -31,7 +51,8 @@ const useOrders = () => {
 
   useEffect(() => {
     fetchOrdersCount();
-  }, [user, fetchOrdersCount]);
+    fetchAllOrders();
+  }, [user, fetchOrdersCount, fetchAllOrders]);
 
   const createOrder = async (itemId: string | undefined, quantity: number) => {
     if (user && user.id && itemId) {
@@ -56,7 +77,7 @@ const useOrders = () => {
     }
   };
 
-  return { ordersCount, loading, createOrder };
+  return { ordersCount, loading, createOrder, allOrders };
 };
 
 export default useOrders;

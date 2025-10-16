@@ -22,6 +22,11 @@ class OrdersController < ActionController::API
   end
 end
 
+def all_orders
+  orders = Order.all
+  render json: orders, status: :ok
+end
+
 
   def show
     @order = Order.find_by(id: params[:id])

@@ -52,7 +52,7 @@ const useDragging = (
           left: `${coordsX}px`,
           top: `${coordsY}px`,
           pointer: `move`,
-          width: initialRect.width,
+          // width: initialRect.width,
         });
         if (ref.current) {
           ref.current.click();

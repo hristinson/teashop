@@ -1,9 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { User } from "../models/user";
+import { UserModel } from "../models/user";
 
 interface AuthContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: UserModel | null;
+  setUser: (user: UserModel | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -13,7 +13,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserModel | null>(null);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

@@ -1,4 +1,9 @@
 class UsersController < ApplicationController
+  def index
+    users = User.all
+    render json: users, status: :ok
+  end
+
    def create
     user_params = params.require(:user).permit(:first_name, :last_name, :email, :password_digest, :role)
     existing_user = User.find_by(email: user_params[:email])
