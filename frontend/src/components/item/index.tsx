@@ -47,8 +47,8 @@ const Item: React.FC<ItemProps> = (props) => {
         {user && user.role !== "admin" ? (
           <button
             className="item_buy_button"
-            onClick={() => {
-              createOrder(item.id, 1);
+            onClick={async () => {
+              await createOrder(item.id, 1);
               setIsDialogOrdersOpen && setIsDialogOrdersOpen(true);
             }}
           >

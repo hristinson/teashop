@@ -59,15 +59,16 @@ end
   end
 
   def destroy
-    @order = Order.find_by(id: params[:id])
+  @order = Order.find_by(id: params[:id])
 
     if @order
       @order.destroy
-      render json: { message: "err OrdersController destroy" }, status: :no_content
+      render json: { message: "Order was successfully deleted" }, status: :ok
     else
-      render json: { error: "err OrdersController destroy no order" }, status: :not_found
+      render json: { error: "Order not found" }, status: :not_found
     end
   end
+
 
   def count
     user_id = params[:user_id]

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../context";
 import axios from "axios";
+import { useDeleteOrder } from "../../hooks/useDeleteOrder";
+import useDragging from "../../hooks/useDragging";
 import "./index.css";
 
 type Order = {
@@ -22,7 +24,21 @@ const OrdersDialog: React.FC<OrdersDialogInterface> = ({
 }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const dragProps = useDragging(dialogRef, true);
   const { user } = useAuth();
+  const { deleteOrder } = useDeleteOrder();
+
+  const handleDelete = async (id: number) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this order?"
+    );
+    if (!confirmed) return;
+
+    const success = await deleteOrder(id);
+    if (success) {
+      closeModal();
+    }
+  };
 
   useEffect(() => {
     if (showModal && dialogRef.current) {
@@ -50,7 +66,12 @@ const OrdersDialog: React.FC<OrdersDialogInterface> = ({
   }, [user, showModal]);
 
   return (
-    <dialog ref={dialogRef} id="orders-dialog" className="dialog">
+    <dialog
+      ref={dialogRef}
+      id="orders-dialog"
+      className="dialog"
+      {...dragProps}
+    >
       <button className="close-btn" onClick={closeModal}>
         X
       </button>
@@ -63,6 +84,7 @@ const OrdersDialog: React.FC<OrdersDialogInterface> = ({
               <th>Item name</th>
               <th>Item price</th>
               <th>quantity</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -80,6 +102,9 @@ const OrdersDialog: React.FC<OrdersDialogInterface> = ({
                   <td>
                     {order.orders_descriptions[0] &&
                       order.orders_descriptions[0].quantity}
+                  </td>
+                  <td>
+                    <button onClick={() => handleDelete(order.id)}>X</button>
                   </td>
                 </tr>
               );
